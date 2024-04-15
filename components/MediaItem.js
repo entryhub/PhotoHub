@@ -74,8 +74,8 @@ const styles = StyleSheet.create({
     bottom: 4,
     right: 4,
     backgroundColor: "white",
-    borderRadius: "10px",
-    padding: "10px",
+    borderRadius: 12,
+    padding: 2,
     overflow: "hidden",
   },
   videoInfo: {
