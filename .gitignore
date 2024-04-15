@@ -1,0 +1,5 @@
+.expo
+node_modules/.bin
+node_modules/
+package-lock.json
+backup/
