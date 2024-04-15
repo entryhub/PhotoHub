@@ -18,6 +18,7 @@ import AlbumView from "./pages/AlbumView";
 
 export default function App() {
   const [userAlbums, setUserAlbums] = useState([]);
+  const [recentsAlbum, setRecentsAlbum] = useState();
 
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
 
@@ -28,6 +29,7 @@ export default function App() {
     const fetchedAlbums = await MediaLibrary.getAlbumsAsync({
       includeSmartAlbums: true,
     });
+    setRecentsAlbum(fetchedAlbums.filter((item) => item.title == "Recents")[0]);
     setUserAlbums(fetchedAlbums.filter((item) => item.type !== "smartAlbum"));
   }
 
@@ -38,6 +40,9 @@ export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <Button onPress={getAlbums} title="Get albums" />
+      {recentsAlbum && (
+        <AlbumView albumInfo={recentsAlbum} userAlbums={userAlbums}></AlbumView>
+      )}
     </SafeAreaView>
   );
 }
