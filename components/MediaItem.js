@@ -1,11 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Button, Text, StyleSheet, Image, View, Pressable } from "react-native";
 import * as MediaLibrary from "expo-media-library";
 import { Video } from "expo-av";
 import { AntDesign } from "@expo/vector-icons";
+import { GlobalContext } from "../App";
 
-export default function MediaItem({ assetInfo }) {
+export default function MediaItem({ assetInfo, onPress }) {
   const [isSelected, setIsSelected] = useState(false);
+
+  const { userAlbums, userAlbumsSet } = useContext(GlobalContext);
 
   function formatDuration(seconds) {
     seconds = Math.floor(seconds);
@@ -21,17 +24,18 @@ export default function MediaItem({ assetInfo }) {
     return date.toLocaleDateString("en-US").replaceAll("/", ".");
   }
 
-  function handlePress(event, asset) {}
+  function handlePress() {
+    setIsSelected(!isSelected);
+    onPress(assetInfo);
+  }
 
   return (
     <Pressable
-      pro={"parent"}
       key={assetInfo.id}
       style={styles.assetContainer}
-      onPress={() => setIsSelected(!isSelected)}
+      onPress={handlePress}
     >
       <Image
-        pro={"child"}
         key={assetInfo.id}
         source={{ uri: assetInfo.uri }}
         style={styles.assetImage}
