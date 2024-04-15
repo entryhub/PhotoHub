@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext } from "react";
 import {
   Button,
   Text,
@@ -16,10 +16,13 @@ import AlbumPreview from "./components/AlbumPreview";
 import MediaItem from "./components/MediaItem";
 import AlbumView from "./pages/AlbumView";
 
+export const GlobalContext = createContext({});
+
 export default function App() {
   const [userAlbums, setUserAlbums] = useState([]);
   const [recentsAlbum, setRecentsAlbum] = useState();
-
+  const [favoritesAlbum, setFavoritesAlbum] = useState();
+  const [smartAlbums, setSmartAlbums] = useState([]);
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
 
   async function getAlbums() {
@@ -29,8 +32,12 @@ export default function App() {
     const fetchedAlbums = await MediaLibrary.getAlbumsAsync({
       includeSmartAlbums: true,
     });
-    setRecentsAlbum(fetchedAlbums.filter((item) => item.title == "Recents")[0]);
+
     setUserAlbums(fetchedAlbums.filter((item) => item.type !== "smartAlbum"));
+    setRecentsAlbum(fetchedAlbums.filter((item) => item.title == "Recents")[0]);
+    setFavoritesAlbum(
+      fetchedAlbums.filter((item) => item.title == "Favorites")[0]
+    );
   }
 
   // useEffect(() => {
@@ -38,12 +45,28 @@ export default function App() {
   // }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Button onPress={getAlbums} title="Get albums" />
-      {recentsAlbum && (
-        <AlbumView assetInfo={recentsAlbum} userAlbums={userAlbums}></AlbumView>
-      )}
-    </SafeAreaView>
+    <GlobalContext.Provider value={{ userAlbums, setUserAlbums }}>
+      <SafeAreaView style={styles.container}>
+        <Button onPress={getAlbums} title="Get albums" />
+        {/* <ScrollView>
+        <View style={styles.albumsGrid}>
+         {userAlbums && userAlbums.map((albumInfo) => (
+            <AlbumPreview
+              style={styles.albumPreview} 
+              key={albumInfo.id} 
+              albumInfo={albumInfo} 
+              onPress={()=>openAlbumView}/>
+         ))}
+        </View>
+      </ScrollView> */}
+        {recentsAlbum && (
+          <AlbumView
+            albumInfo={recentsAlbum}
+            userAlbums={userAlbums}
+          ></AlbumView>
+        )}
+      </SafeAreaView>
+    </GlobalContext.Provider>
   );
 }
 
@@ -57,5 +80,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
+  },
+  itemsWrapper: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: "2px",
   },
 });
