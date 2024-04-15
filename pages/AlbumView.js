@@ -1,72 +1,92 @@
 import { useState, useEffect } from "react";
-import { Button, Text, StyleSheet, Image, View, Pressable } from "react-native";
+import {
+  Button,
+  Text,
+  View,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Platform,
+} from "react-native";
 import * as MediaLibrary from "expo-media-library";
-import { Video } from "expo-av";
-import { AntDesign } from "@expo/vector-icons";
+import MediaItem from "../components/MediaItem";
 
-export default function MediaItem({ assetInfo }) {
-  function formatDuration(seconds) {
-    seconds = Math.floor(seconds);
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    const formattedSeconds =
-      remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds;
-    return `${minutes}:${formattedSeconds}`;
+export default function AlbumView({ albumInfo, userAlbums, itemCount = 500 }) {
+  const [albumAssets, setAlbumAssets] = useState([]);
+  const [currentImage, setCurrentImage] = useState(null);
+  const [selectedItems, setSelectedItems] = useState([]);
+
+  useEffect(() => {
+    async function getAlbumAssets() {
+      const { assets } = await MediaLibrary.getAssetsAsync({
+        album: albumInfo,
+        first: itemCount,
+        mediaType: [MediaLibrary.MediaType.photo, MediaLibrary.MediaType.video],
+        // sortBy: [MediaLibrary.SortBy.duration]
+      });
+
+      if (albumInfo.title == "Recents") {
+        const promises = userAlbums.map(
+          async (item) =>
+            await MediaLibrary.getAssetsAsync({
+              album: item,
+              first: 100,
+              mediaType: [
+                MediaLibrary.MediaType.photo,
+                MediaLibrary.MediaType.video,
+              ],
+            })
+        );
+        const results = await Promise.all(promises);
+        const items = results.flatMap((obj) => obj.assets);
+        const filteredAssets = assets.filter(
+          ({ id }) => !items.some((obj) => obj.id === id)
+        );
+        setAlbumAssets(filteredAssets);
+        // await MediaLibrary.createAlbumAsync('testing');
+        // await MediaLibrary.addAssetsToAlbumAsync(assets, 'testing')
+      } else {
+        setAlbumAssets(assets);
+      }
+    }
+    getAlbumAssets();
+  }, [albumInfo]);
+
+  function addToAlbum() {
+    MediaLibrary.addAssetsToAlbumAsync("assetsArray", "album");
   }
 
-  function formatDate(timestamp) {
-    const date = new Date(timestamp);
-    return date.toLocaleDateString("en-US").replaceAll("/", ".");
+  function createAlbum() {
+    MediaLibrary.createAlbumAsync("albumName", "asset");
   }
 
-  function handlePress(event, asset) {}
+  function handlePress(asset) {
+    console.log(asset);
+  }
 
   return (
-    <Pressable pro={"parent"} key={assetInfo.id} style={styles.assetContainer}>
-      <Image
-        pro={"child"}
-        key={assetInfo.id}
-        source={{ uri: assetInfo.uri }}
-        style={styles.assetImage}
-      />
-      {assetInfo.mediaType === "video" && !isSelected ? (
-        <>
-          <Text style={styles.videoInfo}>
-            {formatDuration(assetInfo.duration)}
-          </Text>
-          {/* <Text style={styles.videoDate}>{formatDate(assetInfo.creationTime)}</Text> */}
-        </>
-      ) : null}
-    </Pressable>
+    <ScrollView>
+      {albumAssets && (
+        <View style={styles.itemsWrapper}>
+          {albumAssets &&
+            albumAssets.map((assetInfo, index) => (
+              <MediaItem
+                key={index}
+                assetInfo={assetInfo}
+                onPress={handlePress}
+              />
+            ))}
+        </View>
+      )}
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  assetContainer: {
-    position: "relative",
-    width: "32.9%",
-  },
-  assetImage: {
-    width: "100%",
-    aspectRatio: 1, // Keep aspect ratio
-  },
-  checkSymbol: {
-    position: "absolute",
-    bottom: 4,
-    right: 4,
-  },
-  videoInfo: {
-    position: "absolute",
-    color: "white",
-    padding: 8,
-    bottom: 0,
-    right: 0,
-  },
-  videoDate: {
-    position: "absolute",
-    color: "white",
-    padding: 8,
-    bottom: 0,
-    left: 0,
+  itemsWrapper: {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: "2px",
   },
 });
