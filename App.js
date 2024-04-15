@@ -41,7 +41,7 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       <Button onPress={getAlbums} title="Get albums" />
       {recentsAlbum && (
-        <AlbumView albumInfo={recentsAlbum} userAlbums={userAlbums}></AlbumView>
+        <AlbumView assetInfo={recentsAlbum} userAlbums={userAlbums}></AlbumView>
       )}
     </SafeAreaView>
   );

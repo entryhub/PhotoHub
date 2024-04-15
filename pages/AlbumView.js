@@ -1,44 +1,72 @@
 import { useState, useEffect } from "react";
-import {
-  Button,
-  Text,
-  View,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Platform,
-} from "react-native";
+import { Button, Text, StyleSheet, Image, View, Pressable } from "react-native";
 import * as MediaLibrary from "expo-media-library";
+import { Video } from "expo-av";
+import { AntDesign } from "@expo/vector-icons";
 
-export default function AlbumView({ albumInfo, userAlbums, itemCount = 5 }) {
-  const [albumAssets, setAlbumAssets] = useState([]);
+export default function MediaItem({ assetInfo }) {
+  function formatDuration(seconds) {
+    seconds = Math.floor(seconds);
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    const formattedSeconds =
+      remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds;
+    return `${minutes}:${formattedSeconds}`;
+  }
 
-  useEffect(() => {
-    async function getAlbumAssets() {
-      const { assets } = await MediaLibrary.getAssetsAsync({
-        album: albumInfo,
-        first: itemCount,
-        mediaType: [MediaLibrary.MediaType.photo, MediaLibrary.MediaType.video],
-        // sortBy: [MediaLibrary.SortBy.duration]
-      });
+  function formatDate(timestamp) {
+    const date = new Date(timestamp);
+    return date.toLocaleDateString("en-US").replaceAll("/", ".");
+  }
 
-      setAlbumAssets(assets);
-    }
-    getAlbumAssets();
-  }, [albumInfo]);
+  function handlePress(event, asset) {}
 
   return (
-    <ScrollView>
-      {albumAssets && <View style={styles.itemsWrapper}></View>}
-    </ScrollView>
+    <Pressable pro={"parent"} key={assetInfo.id} style={styles.assetContainer}>
+      <Image
+        pro={"child"}
+        key={assetInfo.id}
+        source={{ uri: assetInfo.uri }}
+        style={styles.assetImage}
+      />
+      {assetInfo.mediaType === "video" && !isSelected ? (
+        <>
+          <Text style={styles.videoInfo}>
+            {formatDuration(assetInfo.duration)}
+          </Text>
+          {/* <Text style={styles.videoDate}>{formatDate(assetInfo.creationTime)}</Text> */}
+        </>
+      ) : null}
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  itemsWrapper: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: "2px",
+  assetContainer: {
+    position: "relative",
+    width: "32.9%",
+  },
+  assetImage: {
+    width: "100%",
+    aspectRatio: 1, // Keep aspect ratio
+  },
+  checkSymbol: {
+    position: "absolute",
+    bottom: 4,
+    right: 4,
+  },
+  videoInfo: {
+    position: "absolute",
+    color: "white",
+    padding: 8,
+    bottom: 0,
+    right: 0,
+  },
+  videoDate: {
+    position: "absolute",
+    color: "white",
+    padding: 8,
+    bottom: 0,
+    left: 0,
   },
 });
