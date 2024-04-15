@@ -3,7 +3,7 @@ import { Button, Text, StyleSheet, Image, View, Pressable } from "react-native";
 import * as MediaLibrary from "expo-media-library";
 import { Video } from "expo-av";
 
-export default function AlbumPreview({ albumInfo, itemCount = 1 }) {
+export default function AlbumItem({ albumInfo, itemCount = 1 }) {
   const [albumAssets, setAlbumAssets] = useState([]);
 
   useEffect(() => {

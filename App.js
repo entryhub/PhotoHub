@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { Video } from "expo-av";
 import * as MediaLibrary from "expo-media-library";
-import AlbumPreview from "./components/AlbumPreview";
+import AlbumItem from "./components/AlbumItem";
 import MediaItem from "./components/MediaItem";
 import AlbumView from "./pages/AlbumView";
 
