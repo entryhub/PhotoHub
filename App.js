@@ -45,10 +45,9 @@ export default function App() {
   // }, []);
 
   return (
-    <GlobalContext.Provider value={{ userAlbums, setUserAlbums }}>
-      <SafeAreaView style={styles.container}>
-        <Button onPress={getAlbums} title="Get albums" />
-        {/* <ScrollView>
+    <SafeAreaView style={styles.container}>
+      <Button onPress={getAlbums} title="Get albums" />
+      {/* <ScrollView>
         <View style={styles.albumsGrid}>
          {userAlbums && userAlbums.map((albumInfo) => (
             <AlbumPreview
@@ -59,14 +58,10 @@ export default function App() {
          ))}
         </View>
       </ScrollView> */}
-        {recentsAlbum && (
-          <AlbumView
-            albumInfo={recentsAlbum}
-            userAlbums={userAlbums}
-          ></AlbumView>
-        )}
-      </SafeAreaView>
-    </GlobalContext.Provider>
+      {recentsAlbum && (
+        <AlbumView albumInfo={recentsAlbum} userAlbums={userAlbums}></AlbumView>
+      )}
+    </SafeAreaView>
   );
 }
 

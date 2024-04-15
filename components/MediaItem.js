@@ -73,6 +73,10 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 4,
     right: 4,
+    backgroundColor: "white",
+    borderRadius: "10px",
+    padding: "10px",
+    overflow: "hidden",
   },
   videoInfo: {
     position: "absolute",
@@ -88,4 +92,5 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
   },
+  iconStyles: {},
 });
