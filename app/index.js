@@ -10,25 +10,29 @@ import {
   Platform,
   Pressable,
 } from "react-native";
+import { Link } from "expo-router";
 import { Video } from "expo-av";
 import * as MediaLibrary from "expo-media-library";
 import AlbumItem from "./components/AlbumItem";
 import MediaItem from "./components/MediaItem";
-import AlbumView from "./pages/AlbumView";
+import AlbumView from "./AlbumView";
 
 export const GlobalContext = createContext({});
 
-export default function App() {
+export default function Main() {
   const [userAlbums, setUserAlbums] = useState([]);
   const [recentsAlbum, setRecentsAlbum] = useState();
   const [favoritesAlbum, setFavoritesAlbum] = useState();
   const [smartAlbums, setSmartAlbums] = useState([]);
+  // const [accessGiven, setAccessGiven] = useState(false);
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
 
   async function getAlbums() {
     if (permissionResponse.status !== "granted") {
       await requestPermission();
+      // setAccessGiven(true);
     }
+
     const fetchedAlbums = await MediaLibrary.getAlbumsAsync({
       includeSmartAlbums: true,
     });
@@ -40,35 +44,27 @@ export default function App() {
     );
   }
 
-  // useEffect(() => {
-  //   getRecents();
-  // }, []);
+  useEffect(() => {
+    getAlbums();
+  }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.body}>
       <Button onPress={getAlbums} title="Get albums" />
-      {/* <ScrollView>
+      <ScrollView>
         <View style={styles.albumsGrid}>
-         {userAlbums && userAlbums.map((albumInfo) => (
-            <AlbumPreview
-              style={styles.albumPreview} 
-              key={albumInfo.id} 
-              albumInfo={albumInfo} 
-              onPress={()=>openAlbumView}/>
-         ))}
+          {userAlbums &&
+            userAlbums.map((albumInfo) => (
+              <AlbumItem key={albumInfo.id} albumInfo={albumInfo} />
+            ))}
         </View>
-      </ScrollView> */}
-      {recentsAlbum && (
-        <AlbumView albumInfo={recentsAlbum} userAlbums={userAlbums}></AlbumView>
-      )}
-    </SafeAreaView>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: Platform.OS === "android" ? 40 : 0,
+  body: {
     backgroundColor: "#000",
   },
   albumsGrid: {

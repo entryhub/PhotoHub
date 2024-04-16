@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
   assetImage: {
     width: "100%",
     aspectRatio: 1, // Keep aspect ratio
-    borderRadius: "5px",
+    borderRadius: 12,
   },
   albumPreview: {
     marginBottom: 10,

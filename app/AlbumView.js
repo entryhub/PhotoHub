@@ -9,7 +9,8 @@ import {
   Platform,
 } from "react-native";
 import * as MediaLibrary from "expo-media-library";
-import MediaItem from "../components/MediaItem";
+import MediaItem from "./components/MediaItem";
+import { Link } from "expo-router";
 
 export default function AlbumView({ albumInfo, userAlbums, itemCount = 500 }) {
   const [albumAssets, setAlbumAssets] = useState([]);
@@ -70,11 +71,18 @@ export default function AlbumView({ albumInfo, userAlbums, itemCount = 500 }) {
         <View style={styles.itemsWrapper}>
           {albumAssets &&
             albumAssets.map((assetInfo, index) => (
-              <MediaItem
-                key={index}
-                assetInfo={assetInfo}
-                onPress={handlePress}
-              />
+              <Link
+                href={{
+                  pathname: "MediaView",
+                  params: { assetInfo, albumAssets },
+                }}
+              >
+                <MediaItem
+                  key={index}
+                  assetInfo={assetInfo}
+                  onPress={handlePress}
+                />
+              </Link>
             ))}
         </View>
       )}

@@ -3,12 +3,9 @@ import { Button, Text, StyleSheet, Image, View, Pressable } from "react-native";
 import * as MediaLibrary from "expo-media-library";
 import { Video } from "expo-av";
 import { AntDesign } from "@expo/vector-icons";
-import { GlobalContext } from "../App";
 
 export default function MediaItem({ assetInfo, onPress }) {
   const [isSelected, setIsSelected] = useState(false);
-
-  const { userAlbums, userAlbumsSet } = useContext(GlobalContext);
 
   function formatDuration(seconds) {
     seconds = Math.floor(seconds);
