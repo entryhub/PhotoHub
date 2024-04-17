@@ -7,12 +7,18 @@ import {
   ScrollView,
   StyleSheet,
   Platform,
+  Pressable,
 } from "react-native";
 import * as MediaLibrary from "expo-media-library";
 import MediaItem from "./components/MediaItem";
 import { Link } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
+import { useGlobal } from "./providers/GlobalProvider";
 
-export default function AlbumView({ albumInfo, userAlbums, itemCount = 500 }) {
+export default function AlbumItemsView({ userAlbums = [], itemCount = 500 }) {
+  const { currentAlbum } = useGlobal();
+
+  const [isSelectMode, setIsSelectMode] = useState(false);
   const [albumAssets, setAlbumAssets] = useState([]);
   const [currentImage, setCurrentImage] = useState(null);
   const [selectedItems, setSelectedItems] = useState([]);
@@ -20,13 +26,13 @@ export default function AlbumView({ albumInfo, userAlbums, itemCount = 500 }) {
   useEffect(() => {
     async function getAlbumAssets() {
       const { assets } = await MediaLibrary.getAssetsAsync({
-        album: albumInfo,
+        album: currentAlbum,
         first: itemCount,
         mediaType: [MediaLibrary.MediaType.photo, MediaLibrary.MediaType.video],
         // sortBy: [MediaLibrary.SortBy.duration]
       });
 
-      if (albumInfo.title == "Recents") {
+      if (currentAlbum.title == "Recents") {
         const promises = userAlbums.map(
           async (item) =>
             await MediaLibrary.getAssetsAsync({
@@ -51,7 +57,7 @@ export default function AlbumView({ albumInfo, userAlbums, itemCount = 500 }) {
       }
     }
     getAlbumAssets();
-  }, [albumInfo]);
+  }, [currentAlbum]);
 
   function addToAlbum() {
     MediaLibrary.addAssetsToAlbumAsync("assetsArray", "album");
@@ -61,40 +67,38 @@ export default function AlbumView({ albumInfo, userAlbums, itemCount = 500 }) {
     MediaLibrary.createAlbumAsync("albumName", "asset");
   }
 
-  function handlePress(asset) {
-    console.log(asset);
-  }
-
   return (
-    <ScrollView>
-      {albumAssets && (
-        <View style={styles.itemsWrapper}>
-          {albumAssets &&
-            albumAssets.map((assetInfo, index) => (
-              <Link
-                href={{
-                  pathname: "MediaView",
-                  params: { assetInfo, albumAssets },
-                }}
-              >
-                <MediaItem
-                  key={index}
-                  assetInfo={assetInfo}
-                  onPress={handlePress}
-                />
-              </Link>
-            ))}
+    <>
+      <Pressable style={s.selectButton}>
+        <Text style={s.selectButtonText}>
+          {isSelectMode ? "cancel" : "  select"}
+        </Text>
+      </Pressable>
+      <ScrollView>
+        <View style={s.itemsWrapper}>
+          {albumAssets.map((assetInfo, index) => (
+            <MediaItem key={assetInfo.id} assetInfo={assetInfo} />
+          ))}
         </View>
-      )}
-    </ScrollView>
+      </ScrollView>
+    </>
   );
 }
 
-const styles = StyleSheet.create({
+const s = StyleSheet.create({
   itemsWrapper: {
     display: "flex",
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: "2px",
+    gap: 2,
+  },
+  selectButton: {
+    position: "absolute",
+    zIndex: 10,
+    right: 20,
+    top: 50,
+  },
+  selectButtonText: {
+    color: "white",
   },
 });

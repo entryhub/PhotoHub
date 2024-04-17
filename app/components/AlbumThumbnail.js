@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import { Button, Text, StyleSheet, Image, View, Pressable } from "react-native";
+import { Link, router } from "expo-router";
 import * as MediaLibrary from "expo-media-library";
 import { Video } from "expo-av";
+import { useGlobal } from "../providers/GlobalProvider";
 
-export default function AlbumItem({ albumInfo, itemCount = 1 }) {
+export default function AlbumThumbnail({ albumInfo, itemCount = 1 }) {
   const [albumAssets, setAlbumAssets] = useState([]);
+  const { setCurrentAlbum } = useGlobal();
 
   useEffect(() => {
     async function getAlbumAssets() {
@@ -19,18 +22,22 @@ export default function AlbumItem({ albumInfo, itemCount = 1 }) {
   }, [albumInfo]);
 
   return (
-    <Pressable style={styles.albumPreview} key={albumInfo.id}>
-      <View style={styles.albumAssetsContainer}>
-        {albumAssets &&
-          albumAssets.map((asset) => (
-            <View key={asset.id}>
-              <Image
-                key={asset.id}
-                source={{ uri: asset.uri }}
-                style={styles.assetImage}
-              />
-            </View>
-          ))}
+    <Pressable
+      href="AlbumItemsView"
+      style={styles.albumPreview}
+      onPress={() => {
+        setCurrentAlbum(albumInfo);
+        router.push("AlbumItemsView");
+      }}
+    >
+      <View style={styles.albumThumbnailWrapper}>
+        {albumAssets.map((asset) => (
+          <Image
+            key={asset.id}
+            source={{ uri: asset.uri }}
+            style={styles.assetImage}
+          />
+        ))}
       </View>
       <Text style={styles.albumTitle}>{albumInfo.title}</Text>
       <Text style={styles.albumCount}>{albumInfo.assetCount}</Text>
@@ -46,7 +53,7 @@ const styles = StyleSheet.create({
     color: "gray",
     marginBottom: 2,
   },
-  albumAssetsContainer: {
+  albumThumbnailWrapper: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 4,
