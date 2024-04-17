@@ -65,6 +65,5 @@ const styles = StyleSheet.create({
   },
   albumPreview: {
     marginBottom: 10,
-    width: "32%",
   },
 });

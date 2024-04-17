@@ -22,8 +22,8 @@ export const GlobalContext = createContext({});
 
 export default function Main() {
   const [userAlbums, setUserAlbums] = useState([]);
-  const [recentsAlbum, setRecentsAlbum] = useState();
-  const [favoritesAlbum, setFavoritesAlbum] = useState();
+  const [recentsAlbum, setRecentsAlbum] = useState({});
+  const [favoritesAlbum, setFavoritesAlbum] = useState({});
   const [smartAlbums, setSmartAlbums] = useState([]);
   // const [accessGiven, setAccessGiven] = useState(false);
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
@@ -58,8 +58,18 @@ export default function Main() {
       </View>
       <ScrollView>
         <View style={styles.albumsGrid}>
+          <View style={styles.thumbnailsTop}>
+            <AlbumThumbnail albumInfo={recentsAlbum} />
+          </View>
+          <View style={styles.thumbnailsTop}>
+            <AlbumThumbnail albumInfo={favoritesAlbum} />
+          </View>
+        </View>
+        <View style={styles.albumsGrid}>
           {userAlbums.map((albumInfo) => (
-            <AlbumThumbnail key={albumInfo.id} albumInfo={albumInfo} />
+            <View style={styles.thumbnailsInGrid}>
+              <AlbumThumbnail key={albumInfo.id} albumInfo={albumInfo} />
+            </View>
           ))}
         </View>
       </ScrollView>
@@ -77,11 +87,6 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "space-between",
   },
-  itemsWrapper: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: "2px",
-  },
   accessButtonText: {
     color: "white",
   },
@@ -89,5 +94,15 @@ const styles = StyleSheet.create({
     // position: "absolute",
     // top: "50%",
     // left: "50%",
+  },
+  thumbnailsInGrid: {
+    width: "32%",
+  },
+  thumbnailsTop: {
+    width: "48%",
+  },
+  topWrapper: {
+    display: "flex",
+    flexDirection: "row",
   },
 });
