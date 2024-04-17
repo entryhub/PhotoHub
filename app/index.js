@@ -13,9 +13,10 @@ import {
 import { Link } from "expo-router";
 import { Video } from "expo-av";
 import * as MediaLibrary from "expo-media-library";
-import AlbumItem from "./components/AlbumItem";
+import AlbumThumbnail from "./components/AlbumThumbnail";
 import MediaItem from "./components/MediaItem";
-import AlbumView from "./AlbumView";
+import AlbumItemsView from "./AlbumItemsView";
+import { GlobalProvider } from "./providers/GlobalProvider";
 
 export const GlobalContext = createContext({});
 
@@ -28,7 +29,7 @@ export default function Main() {
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
 
   async function getAlbums() {
-    if (permissionResponse.status !== "granted") {
+    if (permissionResponse?.status !== "granted") {
       await requestPermission();
       // setAccessGiven(true);
     }
@@ -49,23 +50,27 @@ export default function Main() {
   }, []);
 
   return (
-    <View style={styles.body}>
-      <Button onPress={getAlbums} title="Get albums" />
+    <SafeAreaView style={styles.body}>
+      <View>
+        <Pressable style={styles.accessButton} onPress={getAlbums}>
+          <Text style={styles.accessButtonText}>Access Photos</Text>
+        </Pressable>
+      </View>
       <ScrollView>
         <View style={styles.albumsGrid}>
-          {userAlbums &&
-            userAlbums.map((albumInfo) => (
-              <AlbumItem key={albumInfo.id} albumInfo={albumInfo} />
-            ))}
+          {userAlbums.map((albumInfo) => (
+            <AlbumThumbnail key={albumInfo.id} albumInfo={albumInfo} />
+          ))}
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   body: {
     backgroundColor: "#000",
+    height: "100%",
   },
   albumsGrid: {
     flexDirection: "row",
@@ -76,5 +81,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     gap: "2px",
+  },
+  accessButtonText: {
+    color: "white",
+  },
+  accessButton: {
+    // position: "absolute",
+    // top: "50%",
+    // left: "50%",
   },
 });

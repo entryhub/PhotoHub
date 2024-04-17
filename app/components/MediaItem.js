@@ -3,9 +3,11 @@ import { Button, Text, StyleSheet, Image, View, Pressable } from "react-native";
 import * as MediaLibrary from "expo-media-library";
 import { Video } from "expo-av";
 import { AntDesign } from "@expo/vector-icons";
+import { useGlobal } from "../providers/GlobalProvider";
 
-export default function MediaItem({ assetInfo, onPress }) {
+export default function MediaItem({ assetInfo }) {
   const [isSelected, setIsSelected] = useState(false);
+  const { setCurrentMediaItem } = useGlobal();
 
   function formatDuration(seconds) {
     seconds = Math.floor(seconds);
@@ -23,15 +25,14 @@ export default function MediaItem({ assetInfo, onPress }) {
 
   function handlePress() {
     setIsSelected(!isSelected);
-    onPress(assetInfo);
+    // if(isSelectMode){
+    //   setCurrentMediaItem(assetInfo);
+    //   router.push("MediaView");
+    // }
   }
 
   return (
-    <Pressable
-      key={assetInfo.id}
-      style={styles.assetContainer}
-      onPress={handlePress}
-    >
+    <View style={styles.assetContainer} onTouchStart={handlePress}>
       <Image
         key={assetInfo.id}
         source={{ uri: assetInfo.uri }}
@@ -53,7 +54,7 @@ export default function MediaItem({ assetInfo, onPress }) {
           color="dodgerblue"
         />
       )}
-    </Pressable>
+    </View>
   );
 }
 
