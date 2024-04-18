@@ -11,6 +11,8 @@ export default function AppLayout() {
             fontWeight: "bold",
             color: "white",
           },
+          headerTitleAlign: "center",
+          headerTintColor: "white",
         }}
       >
         <Stack.Screen name="index" options={{ title: "Albums" }} />

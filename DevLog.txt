@@ -1,2 +1,3 @@
 //Bugs
     status bar color is black, and not visible
+    scroll bar is dark

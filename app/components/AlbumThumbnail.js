@@ -5,7 +5,7 @@ import * as MediaLibrary from "expo-media-library";
 import { Video } from "expo-av";
 import { useGlobal } from "../providers/GlobalProvider";
 
-export default function AlbumThumbnail({ albumInfo, itemCount = 1 }) {
+export default function AlbumThumbnail({ albumInfo = {}, itemCount = 1 }) {
   const [albumAssets, setAlbumAssets] = useState([]);
   const { setCurrentAlbum } = useGlobal();
 

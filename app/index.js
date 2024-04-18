@@ -26,6 +26,7 @@ export default function Main() {
   const [recentsAlbum, setRecentsAlbum] = useState({});
   const [favoritesAlbum, setFavoritesAlbum] = useState({});
   const [smartAlbums, setSmartAlbums] = useState([]);
+  const [isHeaderTransparent, setIsHeaderTransparent] = useState(true);
   // const [accessGiven, setAccessGiven] = useState(false);
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
 
@@ -50,13 +51,18 @@ export default function Main() {
     getAlbums();
   }, []);
 
+  function handleScroll(event) {
+    setIsHeaderTransparent(event?.nativeEvent.contentOffset.y == 0);
+  }
   return (
-    <SafeAreaView style={styles.body}>
+    <View style={styles.body}>
       <Stack.Screen
         options={{
           headerStyle: {
-            backgroundColor: "#000",
+            backgroundColor: isHeaderTransparent ? "#000" : "transparent",
           },
+          headerTransparent: true,
+          headerBlurEffect: "systemUltraThinMaterialDark",
         }}
       />
       <View>
@@ -64,7 +70,8 @@ export default function Main() {
           <Text style={styles.accessButtonText}>Access Photos</Text>
         </Pressable> */}
       </View>
-      <ScrollView>
+      <ScrollView onScroll={handleScroll}>
+        <View style={styles.headerSpace}></View>
         <View style={styles.albumsGrid}>
           <View style={styles.thumbnailsTop}>
             <AlbumThumbnail albumInfo={recentsAlbum} />
@@ -81,7 +88,7 @@ export default function Main() {
           ))}
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -112,5 +119,8 @@ const styles = StyleSheet.create({
   topWrapper: {
     display: "flex",
     flexDirection: "row",
+  },
+  headerSpace: {
+    height: 100,
   },
 });
