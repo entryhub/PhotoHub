@@ -9,8 +9,9 @@ import {
   View,
   Platform,
   Pressable,
+  StatusBar,
 } from "react-native";
-import { Link } from "expo-router";
+import { Link, Stack } from "expo-router";
 import { Video } from "expo-av";
 import * as MediaLibrary from "expo-media-library";
 import AlbumThumbnail from "./components/AlbumThumbnail";
@@ -51,10 +52,17 @@ export default function Main() {
 
   return (
     <SafeAreaView style={styles.body}>
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            backgroundColor: "#000",
+          },
+        }}
+      />
       <View>
-        <Pressable style={styles.accessButton} onPress={getAlbums}>
+        {/* <Pressable style={styles.accessButton} onPress={getAlbums}>
           <Text style={styles.accessButtonText}>Access Photos</Text>
-        </Pressable>
+        </Pressable> */}
       </View>
       <ScrollView>
         <View style={styles.albumsGrid}>

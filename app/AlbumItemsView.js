@@ -11,8 +11,8 @@ import {
 } from "react-native";
 import * as MediaLibrary from "expo-media-library";
 import MediaItem from "./components/MediaItem";
-import { Link } from "expo-router";
-import { useLocalSearchParams } from "expo-router";
+import { Link, Stack } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useGlobal } from "./providers/GlobalProvider";
 
 export default function AlbumItemsView({ userAlbums = [], itemCount = 500 }) {
@@ -22,6 +22,12 @@ export default function AlbumItemsView({ userAlbums = [], itemCount = 500 }) {
   const [albumAssets, setAlbumAssets] = useState([]);
   const [currentImage, setCurrentImage] = useState(null);
   const [selectedItems, setSelectedItems] = useState([]);
+
+  //// Remove navigation header
+  // const navigation = useNavigation();
+  // useEffect(() => {
+  //   navigation.setOptions({ headerShown: false });
+  // }, [navigation]);
 
   useEffect(() => {
     async function getAlbumAssets() {
@@ -68,24 +74,36 @@ export default function AlbumItemsView({ userAlbums = [], itemCount = 500 }) {
   }
 
   return (
-    <>
-      <Pressable style={s.selectButton}>
-        <Text style={s.selectButtonText}>
+    <View style={styles.body}>
+      <Stack.Screen
+        options={{
+          title: currentAlbum.title,
+          headerTransparent: true,
+          headerBlurEffect: "systemUltraThinMaterialDark",
+        }}
+      />
+      <Pressable style={styles.selectButton}>
+        <Text style={styles.selectButtonText}>
           {isSelectMode ? "cancel" : "  select"}
         </Text>
       </Pressable>
       <ScrollView>
-        <View style={s.itemsWrapper}>
+        <View style={styles.headerSpace}></View>
+        <View style={styles.itemsWrapper}>
           {albumAssets.map((assetInfo, index) => (
             <MediaItem key={assetInfo.id} assetInfo={assetInfo} />
           ))}
         </View>
       </ScrollView>
-    </>
+    </View>
   );
 }
 
-const s = StyleSheet.create({
+const styles = StyleSheet.create({
+  body: {
+    backgroundColor: "#000",
+    height: "100%",
+  },
   itemsWrapper: {
     display: "flex",
     flexDirection: "row",
@@ -100,5 +118,8 @@ const s = StyleSheet.create({
   },
   selectButtonText: {
     color: "white",
+  },
+  headerSpace: {
+    height: 100,
   },
 });
