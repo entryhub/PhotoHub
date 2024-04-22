@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     zIndex: 100,
     right: 20,
-    top: 210,
+    top: 110,
     borderRadius: 15,
     overflow: "hidden",
   },

@@ -1,9 +1,11 @@
 import { useState, useEffect, useContext } from "react";
 import { Button, Text, StyleSheet, Image, View, Pressable } from "react-native";
 import * as MediaLibrary from "expo-media-library";
+import { router } from "expo-router";
 import { Video } from "expo-av";
 import { AntDesign } from "@expo/vector-icons";
 import { useGlobal } from "../providers/GlobalProvider";
+import Animated from "react-native-reanimated";
 
 export default function MediaItem({ assetInfo }) {
   const [isSelected, setIsSelected] = useState(false);
@@ -24,15 +26,15 @@ export default function MediaItem({ assetInfo }) {
   }
 
   function handlePress() {
-    setIsSelected(!isSelected);
+    // setIsSelected(!isSelected);
     // if(isSelectMode){
-    //   setCurrentMediaItem(assetInfo);
-    //   router.push("MediaView");
+    setCurrentMediaItem(assetInfo);
+    router.push("MediaView");
     // }
   }
 
   return (
-    <View style={styles.assetContainer} onTouchStart={handlePress}>
+    <Pressable style={styles.assetContainer} onPress={handlePress}>
       <Image
         key={assetInfo.id}
         source={{ uri: assetInfo.uri }}
@@ -54,7 +56,7 @@ export default function MediaItem({ assetInfo }) {
           color="dodgerblue"
         />
       )}
-    </View>
+    </Pressable>
   );
 }
 

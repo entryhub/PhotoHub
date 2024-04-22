@@ -7,6 +7,7 @@ export default function AppLayout() {
   return (
     <GlobalProvider>
       <StatusBar style="light"></StatusBar>
+
       <Stack
         screenOptions={{
           headerTitleStyle: {
@@ -17,8 +18,19 @@ export default function AppLayout() {
           headerTintColor: "white",
         }}
       >
-        <Stack.Screen name="index" options={{ title: "Albums" }} />
+        <Stack.Screen name="index" />
         <Stack.Screen name="AlbumItemsView" />
+        <Stack.Screen
+          name="MediaView"
+          options={{
+            headerStyle: {
+              backgroundColor: "#000",
+            },
+            title: "Photo",
+            // presentation: "transparentModal",
+            // animation: "fade",
+          }}
+        />
       </Stack>
     </GlobalProvider>
   );

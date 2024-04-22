@@ -26,7 +26,7 @@ export default function Main() {
   const [recentsAlbum, setRecentsAlbum] = useState({});
   const [favoritesAlbum, setFavoritesAlbum] = useState({});
   const [smartAlbums, setSmartAlbums] = useState([]);
-  const [isHeaderTransparent, setIsHeaderTransparent] = useState(true);
+  const [isHeaderTransparent, setIsHeaderTransparent] = useState(false);
   // const [accessGiven, setAccessGiven] = useState(false);
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
 
@@ -52,17 +52,18 @@ export default function Main() {
   }, []);
 
   function handleScroll(event) {
-    setIsHeaderTransparent(event?.nativeEvent.contentOffset.y == 0);
+    // setIsHeaderTransparent(event?.nativeEvent.contentOffset.y == 0);
   }
   return (
     <View style={styles.body}>
       <Stack.Screen
         options={{
           headerStyle: {
-            backgroundColor: isHeaderTransparent ? "#000" : "transparent",
+            backgroundColor: isHeaderTransparent ? "transparent" : "#000",
           },
-          headerTransparent: true,
-          headerBlurEffect: "systemUltraThinMaterialDark",
+          title: "Albums",
+          // headerTransparent: true,
+          // headerBlurEffect: "systemUltraThinMaterialDark",
         }}
       />
       <View>
@@ -71,7 +72,7 @@ export default function Main() {
         </Pressable> */}
       </View>
       <ScrollView>
-        <View style={styles.headerSpace}></View>
+        {/* <View style={styles.headerSpace}></View> */}
         <View style={styles.albumsGrid}>
           <View style={styles.thumbnailsTop}>
             <AlbumThumbnail albumInfo={recentsAlbum} />
