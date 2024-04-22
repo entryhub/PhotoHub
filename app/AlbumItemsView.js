@@ -14,6 +14,7 @@ import MediaItem from "./components/MediaItem";
 import { Link, Stack } from "expo-router";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useGlobal } from "./providers/GlobalProvider";
+import { BlurView } from "expo-blur";
 
 export default function AlbumItemsView({ userAlbums = [], itemCount = 500 }) {
   const { currentAlbum } = useGlobal();
@@ -79,15 +80,16 @@ export default function AlbumItemsView({ userAlbums = [], itemCount = 500 }) {
         options={{
           title: currentAlbum.title,
           headerTransparent: true,
-          headerBlurEffect: "systemUltraThinMaterialDark",
         }}
       />
       <Pressable style={styles.selectButton}>
-        <Text style={styles.selectButtonText}>
-          {isSelectMode ? "cancel" : "  select"}
-        </Text>
+        <BlurView style={styles.selectButtonBlur}>
+          <Text style={styles.selectButtonText}>
+            {isSelectMode ? "cancel" : "select"}
+          </Text>
+        </BlurView>
       </Pressable>
-      <ScrollView>
+      <ScrollView fadingEdgeLength={100}>
         <View style={styles.headerSpace}></View>
         <View style={styles.itemsWrapper}>
           {albumAssets.map((assetInfo, index) => (
@@ -110,13 +112,18 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     gap: 2,
   },
+  selectButtonBlur: {},
   selectButton: {
     position: "absolute",
-    zIndex: 10,
+    zIndex: 100,
     right: 20,
-    top: 50,
+    top: 210,
+    borderRadius: 15,
+    overflow: "hidden",
   },
   selectButtonText: {
+    paddingVertical: 5,
+    paddingHorizontal: 10,
     color: "white",
   },
   headerSpace: {

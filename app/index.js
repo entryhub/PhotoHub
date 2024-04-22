@@ -70,7 +70,7 @@ export default function Main() {
           <Text style={styles.accessButtonText}>Access Photos</Text>
         </Pressable> */}
       </View>
-      <ScrollView onScroll={handleScroll}>
+      <ScrollView>
         <View style={styles.headerSpace}></View>
         <View style={styles.albumsGrid}>
           <View style={styles.thumbnailsTop}>
