@@ -5,6 +5,7 @@ const GlobalContext = createContext();
 export function GlobalProvider({ children }) {
   const [currentAlbum, setCurrentAlbum] = useState(null);
   const [currentMediaItem, setCurrentMediaItem] = useState(null);
+  const [isSelectMode, setIsSelectMode] = useState(false);
 
   return (
     <GlobalContext.Provider
@@ -13,6 +14,8 @@ export function GlobalProvider({ children }) {
         setCurrentAlbum,
         currentMediaItem,
         setCurrentMediaItem,
+        isSelectMode,
+        setIsSelectMode,
       }}
     >
       {children}

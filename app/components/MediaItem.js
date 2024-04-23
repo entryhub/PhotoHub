@@ -7,9 +7,10 @@ import { AntDesign } from "@expo/vector-icons";
 import { useGlobal } from "../providers/GlobalProvider";
 import Animated from "react-native-reanimated";
 
-export default function MediaItem({ assetInfo }) {
+export default function MediaItem({ assetInfo, _onPress }) {
   const [isSelected, setIsSelected] = useState(false);
-  const { setCurrentMediaItem } = useGlobal();
+  const [touchMoving, setTouchMoving] = useState(false);
+  const { isSelectMode } = useGlobal();
 
   function formatDuration(seconds) {
     seconds = Math.floor(seconds);
@@ -26,15 +27,30 @@ export default function MediaItem({ assetInfo }) {
   }
 
   function handlePress() {
-    // setIsSelected(!isSelected);
-    // if(isSelectMode){
-    setCurrentMediaItem(assetInfo);
-    router.push("MediaView");
-    // }
+    if (isSelectMode) {
+      setIsSelected(!isSelected);
+    }
+    _onPress(isSelected);
+  }
+
+  function handleTouchMove(event) {
+    if (!touchMoving) {
+      setTouchMoving(true);
+      setIsSelected(!isSelected);
+    }
+  }
+
+  function handleTouchEnd() {
+    setTouchMoving(false);
   }
 
   return (
-    <Pressable style={styles.assetContainer} onPress={handlePress}>
+    <Pressable
+      style={styles.assetContainer}
+      onPress={handlePress}
+      // onTouchMove={(e) => handleTouchMove(e)}
+      // onTouchEnd={(e) => handleTouchEnd(e)}
+    >
       <Image
         key={assetInfo.id}
         source={{ uri: assetInfo.uri }}

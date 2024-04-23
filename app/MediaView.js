@@ -6,7 +6,6 @@ import { Stack } from "expo-router";
 //draw given image asset uri in the cented with fullscreen
 export default function MediaView() {
   const { currentMediaItem } = useGlobal();
-  console.log("logg", currentMediaItem);
 
   return (
     <View style={styles.pageBody}>

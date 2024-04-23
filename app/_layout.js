@@ -27,8 +27,8 @@ export default function AppLayout() {
               backgroundColor: "#000",
             },
             title: "Photo",
-            // presentation: "transparentModal",
-            // animation: "fade",
+            presentation: "transparentModal",
+            animation: "fade",
           }}
         />
       </Stack>
