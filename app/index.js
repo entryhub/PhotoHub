@@ -54,6 +54,7 @@ export default function Main() {
   function handleScroll(event) {
     // setIsHeaderTransparent(event?.nativeEvent.contentOffset.y == 0);
   }
+
   return (
     <View style={styles.body}>
       <Stack.Screen
@@ -66,13 +67,16 @@ export default function Main() {
           // headerBlurEffect: "systemUltraThinMaterialDark",
         }}
       />
+
       <View>
         {/* <Pressable style={styles.accessButton} onPress={getAlbums}>
           <Text style={styles.accessButtonText}>Access Photos</Text>
         </Pressable> */}
       </View>
+
       <ScrollView>
         {/* <View style={styles.headerSpace}></View> */}
+
         <View style={styles.albumsGrid}>
           <View style={styles.thumbnailsTop}>
             <AlbumThumbnail albumInfo={recentsAlbum} />
@@ -81,6 +85,7 @@ export default function Main() {
             <AlbumThumbnail albumInfo={favoritesAlbum} />
           </View>
         </View>
+
         <View style={styles.albumsGrid}>
           {userAlbums.map((albumInfo) => (
             <View style={styles.thumbnailsInGrid}>

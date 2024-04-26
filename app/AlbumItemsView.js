@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import {
   Button,
   Text,
@@ -9,12 +8,16 @@ import {
   Platform,
   Pressable,
 } from "react-native";
+
+import { useState, useEffect, useMemo, useRef } from "react";
 import * as MediaLibrary from "expo-media-library";
 import MediaItem from "./components/MediaItem";
 import { Link, Stack } from "expo-router";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { useGlobal } from "./providers/GlobalProvider";
 import { BlurView } from "expo-blur";
+import BottomSheet from "@gorhom/bottom-sheet";
+import { Feather } from "@expo/vector-icons";
 
 export default function AlbumItemsView({ userAlbums = [], itemCount = 500 }) {
   const { currentAlbum } = useGlobal();
@@ -26,11 +29,11 @@ export default function AlbumItemsView({ userAlbums = [], itemCount = 500 }) {
   const [currentImage, setCurrentImage] = useState(null);
   const [selectedItems, setSelectedItems] = useState([]);
 
-  //// Remove navigation header
-  // const navigation = useNavigation();
-  // useEffect(() => {
-  //   navigation.setOptions({ headerShown: false });
-  // }, [navigation]);
+  const snapPoints = useMemo(() => ["10%"], ["25%"]);
+  const bottomSheetRef = useRef(null);
+
+  const handleClosePress = () => bottomSheetRef.current?.close();
+  const handleOpenPress = () => bottomSheetRef.current?.expand();
 
   useEffect(() => {
     async function getAlbumAssets() {
@@ -38,7 +41,7 @@ export default function AlbumItemsView({ userAlbums = [], itemCount = 500 }) {
         album: currentAlbum,
         first: itemCount,
         mediaType: [MediaLibrary.MediaType.photo, MediaLibrary.MediaType.video],
-        // sortBy: [MediaLibrary.SortBy.duration]
+        //todo sortBy: [MediaLibrary.SortBy.duration]
       });
 
       if (currentAlbum.title == "Recents") {
@@ -97,6 +100,32 @@ export default function AlbumItemsView({ userAlbums = [], itemCount = 500 }) {
     }
   }
 
+  const BottomSheetBackground = ({ style }) => {
+    return (
+      <BlurView
+        experimentalBlurMethod="dimezisBlurView"
+        style={[
+          style,
+          {
+            overflow: "hidden",
+            borderRadius: 0,
+          },
+        ]}
+      />
+    );
+  };
+
+  const HandleComponent = () => (
+    <View style={styles.handleContainer}>
+      <Feather
+        style={styles.addIcon}
+        name="plus-circle"
+        size={25}
+        color="white"
+      />
+    </View>
+  );
+
   return (
     <View style={styles.body}>
       <Stack.Screen
@@ -127,6 +156,17 @@ export default function AlbumItemsView({ userAlbums = [], itemCount = 500 }) {
           ))}
         </View>
       </ScrollView>
+
+      <BottomSheet
+        backgroundComponent={BottomSheetBackground}
+        index={0}
+        ref={bottomSheetRef}
+        snapPoints={snapPoints}
+        handleIndicatorStyle={{ display: "none" }}
+        handleComponent={HandleComponent}
+      >
+        <Text>Bottom sheet modal</Text>
+      </BottomSheet>
     </View>
   );
 }
@@ -154,5 +194,13 @@ const styles = StyleSheet.create({
   },
   headerSpace: {
     height: 100,
+  },
+  addIcon: {
+    margin: 10,
+  },
+  handleContainer: {
+    display: "flex",
+    with: "100%",
+    justifyContent: "",
   },
 });

@@ -66,7 +66,7 @@ export default function MediaItem({ assetInfo, _onPress }) {
       ) : null}
       {isSelected && (
         <AntDesign
-          style={styles.checkSymbol}
+          style={styles.checkIcon}
           name="checkcircle"
           size={20}
           color="dodgerblue"
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     width: "100%",
     aspectRatio: 1, // Keep aspect ratio
   },
-  checkSymbol: {
+  checkIcon: {
     position: "absolute",
     bottom: 4,
     right: 4,

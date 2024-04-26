@@ -2,3 +2,19 @@
     status bar color is black, and not visible
     scroll bar is dark
     default option: items sorted old to new, scrolled to bottom
+
+    open photo MediaView back button on ios
+    statusbar light
+
+//features
+ AlbumItemsView header opacity 0.2 gradient 
+ deselect all on cancel click
+ lazy loading, call first 300 assets and add up on scroll
+ sort by duration button
+ qwqw
+ mediaView page horizontal scroll
+
+ collages editorView
+
+ NEW features badge on sort, collages
+ 
